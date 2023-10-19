@@ -1,6 +1,7 @@
 package com.example.hellorestjpa;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +10,9 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.util.UriComponents;
 
 import java.util.List;
+
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
 @RequestMapping("/winery")
@@ -22,9 +26,12 @@ public class WineryController {
     }
 
     @GetMapping("/{id}")
-    Winery retrieve(@PathVariable Integer id) throws Exception {
-        return wineryRepository.findById(id)
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "not found"));
+    EntityModel<Winery> retrieve(@PathVariable Integer id) throws Exception {
+        Winery found = wineryRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "not found"));
+        return EntityModel.of(found,
+                linkTo(methodOn(WineryController.class).retrieve(id)).withSelfRel()
+        );
     }
 
     @PostMapping("")
@@ -41,7 +48,7 @@ public class WineryController {
     @PutMapping("/{id}")
     Winery update(@PathVariable Integer id, @RequestBody Winery winery) throws Exception {
         Winery found = wineryRepository.findById(id)
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "not found"));
         // ...
         winery.setId(id);
         Winery saved = wineryRepository.save(winery);
@@ -51,7 +58,7 @@ public class WineryController {
     @DeleteMapping("/{id}")
     ResponseEntity<Winery> delete(@PathVariable Integer id) {
         Winery found = wineryRepository.findById(id)
-                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "entity "+id+" not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "entity " + id + " not found"));
         wineryRepository.delete(found);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .body(null);

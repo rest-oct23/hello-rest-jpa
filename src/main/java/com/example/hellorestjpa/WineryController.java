@@ -38,4 +38,23 @@ public class WineryController {
                 .body(saved);
     }
 
+    @PutMapping("/{id}")
+    Winery update(@PathVariable Integer id, @RequestBody Winery winery) throws Exception {
+        Winery found = wineryRepository.findById(id)
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "not found"));
+        // ...
+        winery.setId(id);
+        Winery saved = wineryRepository.save(winery);
+        return saved;
+    }
+
+    @DeleteMapping("/{id}")
+    ResponseEntity<Winery> delete(@PathVariable Integer id) {
+        Winery found = wineryRepository.findById(id)
+                .orElseThrow(()->new ResponseStatusException(HttpStatus.NOT_FOUND, "entity "+id+" not found"));
+        wineryRepository.delete(found);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                .body(null);
+    }
+
 }

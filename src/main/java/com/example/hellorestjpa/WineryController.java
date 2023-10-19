@@ -57,4 +57,16 @@ public class WineryController {
                 .body(null);
     }
 
+    @PatchMapping("/{id}")
+    Winery partialUpdate(@PathVariable Integer id, @RequestBody Winery winery) throws Exception {
+        Winery found = wineryRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "not found"));
+        // ...
+        if (winery.getName() != null) {
+            found.setName(winery.getName());
+        }
+        Winery saved = wineryRepository.save(found);
+        return saved;
+    }
+
 }

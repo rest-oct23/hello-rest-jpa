@@ -1,0 +1,277 @@
+openapi: 3.0.1
+info:
+  title: Winery OpenAPI definition
+  version: v1
+servers:
+- url: http://localhost:8080
+  description: Generated server url
+paths:
+  /api/v1/winery:
+    get:
+      tags:
+      - winery-controller
+      operationId: getAll
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Winery'
+    post:
+      tags:
+      - winery-controller
+      operationId: save
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Winery'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Winery'
+  /api/v1/winery/{id}:
+    get:
+      tags:
+      - winery-controller
+      operationId: getById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Winery'
+    put:
+      tags:
+      - winery-controller
+      operationId: update
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Winery'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Winery'
+    patch:
+      tags:
+      - winery-controller
+      operationId: partialUpdate
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Winery'
+        required: true
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Winery'
+    delete:
+      tags:
+      - winery-controller
+      operationId: delete
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: integer
+          format: int32
+      responses:
+        "400":
+          description: Bad Request
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "404":
+          description: Not Found
+          content:
+            '*/*':
+              schema:
+                type: object
+                additionalProperties:
+                  type: string
+        "204":
+          description: No Content
+components:
+  schemas:
+    Winery:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    Wine:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        year:
+          type: string
+        rating:
+          maximum: 5
+          minimum: 0
+          type: number
+          format: double
+        num_reviews:
+          type: integer
+          format: int32
+        price:
+          type: number
+          format: double
+        body:
+          maximum: 5
+          minimum: 1
+          type: integer
+          format: int32
+        acidity:
+          maximum: 5
+          minimum: 1
+          type: integer
+          format: int32
+        winery_id:
+          type: integer
+          format: int32
+        type_id:
+          type: integer
+          format: int32
+        region_id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    Type:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        name:
+          type: string
+    Region:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int32
+        country:
+          type: string
+        name:
+          type: string
+
